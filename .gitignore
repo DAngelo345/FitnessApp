@@ -79,3 +79,7 @@ backend/.env
 
 # General env files
 .env
+backend/.env
+
+# Prisma generated client (if generated locally)
+generated/

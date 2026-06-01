@@ -41,7 +41,7 @@ export default function LoginScreen() {
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>Sign In</Text>
+          <Text style={styles.title}>FIT AI</Text>
         </View>
 
         {/* Dark body */}
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 42,
     fontWeight: '800',
-    color: '#111',
+    color: '#303030ff',
     letterSpacing: -1,
     marginTop: 4,
   },
@@ -167,19 +167,20 @@ const styles = StyleSheet.create({
     paddingTop: 36,
   },
   label: {
-    fontSize: 12,
-    color: '#555',
+    fontSize: 13.5,
+    color: '#979696ff',
     marginBottom: 6,
     letterSpacing: 0.4,
+    textAlign: 'center'
   },
   input: {
     backgroundColor: '#1c1c1c',
-    borderRadius: 50,
-    paddingVertical: 13,
-    paddingHorizontal: 20,
-    fontSize: 13,
-    color: '#eee',
-    marginBottom: 16,
+  borderRadius: 12,
+  paddingVertical: 15,
+  paddingHorizontal: 20,
+  fontSize: 14,
+  color: '#eee',
+  marginBottom: 20,
   },
 
   // Green outline button
