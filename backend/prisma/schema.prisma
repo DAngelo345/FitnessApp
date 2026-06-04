@@ -16,4 +16,50 @@ model User {
   weight    Float?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  gymVisits   GymVisit[]
+  foodEntries FoodEntry[]
+}
+
+model Gym {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  address              String?
+  latitude             Float
+  longitude            Float
+  geofenceRadiusMeters Int      @default(100)
+  createdAt            DateTime @default(now())
+
+  gymVisits GymVisit[]
+}
+
+model GymVisit {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  gymId           Int
+  checkInTime     DateTime
+  checkOutTime    DateTime?
+  durationMinutes Int?
+  visitSource     String?
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  gym  Gym  @relation(fields: [gymId], references: [id])
+}
+
+model FoodEntry {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  entryDate DateTime
+  foodName  String?
+  imageUrl  String?
+  calories  Int?
+  protein   Float?
+  carbs     Float?
+  fat       Float?
+  source    String   @default("MANUAL")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
