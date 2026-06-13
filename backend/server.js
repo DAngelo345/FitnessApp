@@ -48,6 +48,24 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
+app.get('/search-users', async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        name: req.query.name,
+      },
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Something went wrong',
+    });
+  }
+});
+
 
 app.post('/users', async (req, res) => {
   try {
@@ -66,6 +84,57 @@ app.post('/users', async (req, res) => {
     });
 
     res.status(201).json(user);
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Something went wrong',
+    });
+  }
+});
+
+app.put('/users/:id', async (req, res) => {
+  try {
+    const userId = Number(req.params.id);
+
+    const { name, age, height, weight } = req.body;
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name,
+        age,
+        height,
+        weight,
+      },
+    });
+
+    res.json(user);
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Something went wrong',
+    });
+  }
+});
+
+
+app.delete('/users/:id', async (req, res) => {
+  try {
+    const userId = Number(req.params.id);
+
+    const user = await prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    res.json(user);
 
   } catch (error) {
     console.error(error);
