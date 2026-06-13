@@ -1,20 +1,15 @@
 require('dotenv').config();
 
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
+const prisma = require('./prisma');
+const gymRoutes = require('./routes/gymRoutes');
 
 const app = express();
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-
-const prisma = new PrismaClient({
-  adapter,
-});
+app.set('json spaces', 2);
 
 app.use(express.json());
+
+app.use('/gyms', gymRoutes);
 
 app.get('/users', async (req, res) => {
   const users = await prisma.user.findMany();
@@ -57,6 +52,7 @@ app.get('/search-users', async (req, res) => {
     });
 
     res.json(users);
+
   } catch (error) {
     console.error(error);
 
@@ -65,7 +61,6 @@ app.get('/search-users', async (req, res) => {
     });
   }
 });
-
 
 app.post('/users', async (req, res) => {
   try {
@@ -122,7 +117,6 @@ app.put('/users/:id', async (req, res) => {
     });
   }
 });
-
 
 app.delete('/users/:id', async (req, res) => {
   try {
