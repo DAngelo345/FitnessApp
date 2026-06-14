@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const prisma = require('./prisma');
 const gymRoutes = require('./routes/gymRoutes');
+const foodEntryRoutes = require('./routes/foodEntryRoutes');
 
 const app = express();
 app.set('json spaces', 2);
@@ -10,6 +11,7 @@ app.set('json spaces', 2);
 app.use(express.json());
 
 app.use('/gyms', gymRoutes);
+app.use('/food-entries', foodEntryRoutes);
 
 app.get('/users', async (req, res) => {
   const users = await prisma.user.findMany();
