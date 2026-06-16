@@ -5,22 +5,30 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 
 export default function ProfileSetupScreen() {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
+  const [sex, setSex] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
 
-  const handleContinue = () => {
-    console.log({
-      name,
-      age,
-      height,
-      weight,
-    });
-  };
+const handleContinue = () => {
+  if (!name || !age || !sex || !height || !weight) {
+    Alert.alert('Please fill out all fields');
+    return;
+  }
+
+  console.log({
+    name,
+    age,
+    sex,
+    height,
+    weight,
+  });
+};
 
   return (
     <View style={styles.container}>
@@ -45,6 +53,29 @@ export default function ProfileSetupScreen() {
         keyboardType="numeric"
       />
 
+      <Text style={styles.label}>Sex</Text>
+      <View style={styles.sexContainer}>
+        <TouchableOpacity
+          style={[
+            styles.sexButton,
+            sex === 'Male' && styles.selectedSexButton,
+          ]}
+          onPress={() => setSex('Male')}
+        >
+          <Text style={styles.sexButtonText}>Male</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.sexButton,
+            sex === 'Female' && styles.selectedSexButton,
+          ]}
+          onPress={() => setSex('Female')}
+        >
+          <Text style={styles.sexButtonText}>Female</Text>
+        </TouchableOpacity>
+      </View>
+
       <Text style={styles.label}>Height</Text>
       <TextInput
         style={styles.input}
@@ -65,10 +96,7 @@ export default function ProfileSetupScreen() {
         keyboardType="numeric"
       />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleContinue}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleContinue}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     </View>
@@ -101,6 +129,25 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
+  },
+  sexContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  sexButton: {
+    flex: 1,
+    backgroundColor: '#1C1C1C',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  selectedSexButton: {
+    backgroundColor: '#4CAF50',
+  },
+  sexButtonText: {
+    color: '#FFFFFF',
+    fontWeight: '600',
   },
   button: {
     backgroundColor: '#4CAF50',
