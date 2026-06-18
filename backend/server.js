@@ -66,15 +66,26 @@ app.get('/search-users', async (req, res) => {
 
 app.post('/users', async (req, res) => {
   try {
-    console.log(req.body);
+    const { email, name, age, sex, height, weight } = req.body;
 
-    const { email, name, age, height, weight } = req.body;
+    if (!email) {
+      return res.status(400).json({
+        error: 'Email is required',
+      });
+    }
+
+    if (!name || !age || !sex || !height || !weight) {
+      return res.status(400).json({
+        error: 'Profile fields are required',
+      });
+    }
 
     const user = await prisma.user.create({
       data: {
         email,
         name,
         age,
+        sex,
         height,
         weight,
       },
@@ -95,7 +106,7 @@ app.put('/users/:id', async (req, res) => {
   try {
     const userId = Number(req.params.id);
 
-    const { name, age, height, weight } = req.body;
+    const { name, age, sex, height, weight } = req.body;
 
     const user = await prisma.user.update({
       where: {
@@ -104,6 +115,7 @@ app.put('/users/:id', async (req, res) => {
       data: {
         name,
         age,
+        sex,
         height,
         weight,
       },
