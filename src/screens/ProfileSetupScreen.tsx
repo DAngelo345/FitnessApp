@@ -12,23 +12,50 @@ export default function ProfileSetupScreen() {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [sex, setSex] = useState('');
-  const [height, setHeight] = useState('');
+  const [feet, setFeet] = useState('');
+  const [inches, setInches] = useState('');
   const [weight, setWeight] = useState('');
 
-const handleContinue = () => {
-  if (!name || !age || !sex || !height || !weight) {
-    Alert.alert('Please fill out all fields');
-    return;
-  }
+  const handleContinue = async () => {
+    if (!name || !age || !sex || !feet || !inches || !weight) {
+      Alert.alert('Please fill out all fields');
+      return;
+    }
 
-  console.log({
-    name,
-    age,
-    sex,
-    height,
-    weight,
-  });
-};
+    const totalHeightInches = Number(feet) * 12 + Number(inches);
+
+    try {
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: 'test2frontend-new@example.com',
+          name,
+          age: Number(age),
+          sex,
+          height: totalHeightInches,
+          weight: Number(weight),
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log('Status:', response.status);
+      console.log('Response:', data);
+
+      if (!response.ok) {
+        Alert.alert(data.error || 'Something went wrong');
+        return;
+      }
+
+      Alert.alert('Profile saved');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Something went wrong');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -77,14 +104,25 @@ const handleContinue = () => {
       </View>
 
       <Text style={styles.label}>Height</Text>
-      <TextInput
-        style={styles.input}
-        value={height}
-        onChangeText={setHeight}
-        placeholder="Height in inches"
-        placeholderTextColor="#888"
-        keyboardType="numeric"
-      />
+      <View style={styles.heightContainer}>
+        <TextInput
+          style={styles.heightInput}
+          value={feet}
+          onChangeText={setFeet}
+          placeholder="Feet"
+          placeholderTextColor="#888"
+          keyboardType="numeric"
+        />
+
+        <TextInput
+          style={styles.heightInput}
+          value={inches}
+          onChangeText={setInches}
+          placeholder="Inches"
+          placeholderTextColor="#888"
+          keyboardType="numeric"
+        />
+      </View>
 
       <Text style={styles.label}>Weight</Text>
       <TextInput
@@ -148,6 +186,18 @@ const styles = StyleSheet.create({
   sexButtonText: {
     color: '#FFFFFF',
     fontWeight: '600',
+  },
+  heightContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  heightInput: {
+    flex: 1,
+    backgroundColor: '#1C1C1C',
+    color: '#FFFFFF',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
   },
   button: {
     backgroundColor: '#4CAF50',
