@@ -17,9 +17,17 @@ export default function ProfileSetupScreen() {
   const [weight, setWeight] = useState('');
 
   const handleContinue = async () => {
-    if (!name || !age || !sex || !feet || !inches || !weight) {
-      Alert.alert('Please fill out all fields');
-      return;
+   let errorMessage = '';
+
+    if (!name) errorMessage = 'Please enter your name';
+    else if (!age) errorMessage = 'Please enter your age';
+    else if (!sex) errorMessage = 'Please select your sex';
+    else if (!feet || !inches) errorMessage = 'Please enter your height';
+    else if (!weight) errorMessage = 'Please enter your weight';
+
+    if (errorMessage) {
+        Alert.alert(errorMessage);
+    return;
     }
 
     const totalHeightInches = Number(feet) * 12 + Number(inches);
