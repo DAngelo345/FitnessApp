@@ -19,18 +19,39 @@ export default function ProfileSetupScreen() {
   const handleContinue = async () => {
    let errorMessage = '';
 
-    if (!name) errorMessage = 'Please enter your name';
-    else if (!age) errorMessage = 'Please enter your age';
-    else if (!sex) errorMessage = 'Please select your sex';
-    else if (!feet || !inches) errorMessage = 'Please enter your height';
-    else if (!weight) errorMessage = 'Please enter your weight';
+if (!name) errorMessage = 'Please enter your name';
+else if (!age) errorMessage = 'Please enter your age';
+else if (!sex) errorMessage = 'Please select your sex';
+else if (!feet || !inches) errorMessage = 'Please enter your height';
+else if (!weight) errorMessage = 'Please enter your weight';
 
-    if (errorMessage) {
-        Alert.alert(errorMessage);
-    return;
-    }
+if (errorMessage) {
+  Alert.alert(errorMessage);
+  return;
+}
 
-    const totalHeightInches = Number(feet) * 12 + Number(inches);
+if (Number(age) < 13 || Number(age) > 120) {
+  Alert.alert('Please enter a valid age');
+  return;
+}
+
+if (Number(weight) < 50 || Number(weight) > 1000) {
+  Alert.alert('Please enter a valid weight');
+  return;
+}
+
+if (Number(inches) > 11) {
+  Alert.alert('Inches must be between 0 and 11');
+  return;
+}
+
+if (Number(feet) < 1 || Number(feet) > 8) {
+  Alert.alert('Please enter a valid height');
+  return;
+}
+
+const totalHeightInches =
+  Number(feet) * 12 + Number(inches);
 
     try {
       const response = await fetch('http://localhost:3000/users', {
