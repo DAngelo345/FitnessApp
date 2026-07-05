@@ -15,43 +15,45 @@ export default function ProfileSetupScreen() {
   const [feet, setFeet] = useState('');
   const [inches, setInches] = useState('');
   const [weight, setWeight] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleContinue = async () => {
-   let errorMessage = '';
+    let errorMessage = '';
 
-if (!name) errorMessage = 'Please enter your name';
-else if (!age) errorMessage = 'Please enter your age';
-else if (!sex) errorMessage = 'Please select your sex';
-else if (!feet || !inches) errorMessage = 'Please enter your height';
-else if (!weight) errorMessage = 'Please enter your weight';
+    if (!name) errorMessage = 'Please enter your name';
+    else if (!age) errorMessage = 'Please enter your age';
+    else if (!sex) errorMessage = 'Please select your sex';
+    else if (!feet || !inches) errorMessage = 'Please enter your height';
+    else if (!weight) errorMessage = 'Please enter your weight';
 
-if (errorMessage) {
-  Alert.alert(errorMessage);
-  return;
-}
+    if (errorMessage) {
+      Alert.alert(errorMessage);
+      return;
+    }
 
-if (Number(age) < 13 || Number(age) > 120) {
-  Alert.alert('Please enter a valid age');
-  return;
-}
+    if (Number(age) < 13 || Number(age) > 120) {
+      Alert.alert('Please enter a valid age');
+      return;
+    }
 
-if (Number(weight) < 50 || Number(weight) > 1000) {
-  Alert.alert('Please enter a valid weight');
-  return;
-}
+    if (Number(weight) < 50 || Number(weight) > 1000) {
+      Alert.alert('Please enter a valid weight');
+      return;
+    }
 
-if (Number(inches) > 11) {
-  Alert.alert('Inches must be between 0 and 11');
-  return;
-}
+    if (Number(inches) < 0 || Number(inches) > 11) {
+      Alert.alert('Inches must be between 0 and 11');
+      return;
+    }
 
-if (Number(feet) < 1 || Number(feet) > 8) {
-  Alert.alert('Please enter a valid height');
-  return;
-}
+    if (Number(feet) < 1 || Number(feet) > 8) {
+      Alert.alert('Please enter a valid height');
+      return;
+    }
 
-const totalHeightInches =
-  Number(feet) * 12 + Number(inches);
+    const totalHeightInches = Number(feet) * 12 + Number(inches);
+
+    setIsSaving(true);
 
     try {
       const response = await fetch('http://localhost:3000/users', {
@@ -60,7 +62,7 @@ const totalHeightInches =
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: 'test2frontend-new@example.com',
+          email: `testfrontend-${Date.now()}@example.com`,
           name,
           age: Number(age),
           sex,
@@ -83,6 +85,8 @@ const totalHeightInches =
     } catch (error) {
       console.error(error);
       Alert.alert('Something went wrong');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -163,8 +167,14 @@ const totalHeightInches =
         keyboardType="numeric"
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleContinue}>
-        <Text style={styles.buttonText}>Continue</Text>
+      <TouchableOpacity
+        style={[styles.button, isSaving && styles.disabledButton]}
+        onPress={handleContinue}
+        disabled={isSaving}
+      >
+        <Text style={styles.buttonText}>
+          {isSaving ? 'Saving...' : 'Continue'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -233,6 +243,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 16,
     marginTop: 32,
+  },
+  disabledButton: {
+    backgroundColor: '#2A2A2A',
   },
   buttonText: {
     color: '#FFFFFF',
